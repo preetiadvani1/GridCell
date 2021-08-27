@@ -1,0 +1,122 @@
+#include<bits/stdc++.h>
+#include<stdio.h>
+#define ROW 100
+#define COL 100
+using namespace std;
+//A class to create a grid and having functionality like creating grid,printing grid, function to set the next tick life etc
+class Grid{		
+private :
+    int a[ROW][COL], b[ROW][COL];
+	int i,j;
+	int neighbour_live_cell;
+public:
+    Grid(int row,int col) //constructor for grid initialization
+    {
+        for(i=0; i<row; i++)
+        {
+		    for(j=0;j<col;j++)
+		    {
+			    a[i][j] = rand() % 2;
+		    }
+	    }
+	    cout<<"Initial Stage:";
+	    row_line(col);
+	    for(i=0; i<row; i++)
+	    {
+		    cout<<"| ";
+    		for(j=0;j<col;j++)
+    		{
+	        	cout<<a[i][j]<<" | ";
+    		}
+    		row_line(col);
+	    }
+    }
+    void row_line(int col)//function to create a next line
+    {
+	    cout<<endl;
+    	for(int i=0; i<col; i++)
+    	{
+    	    cout<<"____";
+    	}
+    	cout<<endl;
+    }
+
+    int count_live_neighbour_cell(int a[ROW][COL], int r, int c,int row,int col) //function to count next live neighbour
+    {
+    	int i, j, count=0;
+    	for(i=r-1; i<=r+1; i++){
+	    	for(j=c-1;j<=c+1;j++){
+		    	if((i==r && j==c) || (i<0 || j<0) || (i>=row || j>=col)){
+			    	continue;
+			    }
+    			if(a[i][j]==1){
+	    			count++;
+		    	}
+    		}
+	    }
+	    return count;
+    }
+    void solveMe(int row,int col) // solve funciton to set the next state of cells
+    {
+        for(i=0; i<row; i++)
+        {
+		    for(j=0;j<col;j++)
+		    {
+    		    int	neighbour_live_cell = count_live_neighbour_cell(a,i,j,row,col);
+			    if(a[i][j]==1 && (neighbour_live_cell==2 || neighbour_live_cell==3))
+		    	{
+    	   			b[i][j]=1;
+	    		}
+		    	else if(a[i][j]==0 && neighbour_live_cell==3){
+	    			b[i][j]=1;
+    			}
+		    	else
+	    		{
+    				b[i][j]=0;
+			    }
+		    }
+	    }
+    }
+    void printfinal(int row,int col) //print the next stage
+    {
+        cout<<"\nNext Generation:";
+    	row_line(col);
+    	for(i=0; i<row; i++){
+		cout<<"| ";
+		for(j=0;j<col;j++){
+		cout<<b[i][j]<<" | ";
+		}
+		row_line(col);
+	}
+    }
+    void getprevstage(int row,int col) //print the initial stage
+    {
+        for(i=0; i<row; i++)
+        {
+		    for(j=0;j<col;j++)
+		    {
+			    a[i][j] = b[i][j];
+		    }
+	    } 
+    }
+};
+int main()
+{
+    int row,col;
+    cout<<"enter no. of rows and colums\n";
+    cin>>row>>col;
+    Grid g1(row,col);
+
+// You can uncomment the given comments to see the next 5 stages for the current grid cell lives or you  can increase the value of i
+// so as to see the next stage of cells.
+
+//    int i=0;
+	//while(i<5){
+	g1.solveMe(row,col);
+	g1.printfinal(row,col);
+	g1.getprevstage(row,col);
+//	i++;
+//	}
+
+    return 0;
+}
